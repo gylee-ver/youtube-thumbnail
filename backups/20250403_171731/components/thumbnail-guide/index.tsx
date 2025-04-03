@@ -8,7 +8,6 @@ import { ImportanceContent } from "./importance-content"
 import { errorMonitor } from "@/lib/error-monitoring"
 
 export function ThumbnailGuide() {
-  const [activeTab, setActiveTab] = useState("guide")
   const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
@@ -67,7 +66,7 @@ export function ThumbnailGuide() {
   }
 
   return (
-    <Tabs defaultValue="guide" className="w-full" onValueChange={setActiveTab}>
+    <Tabs defaultValue="guide" className="w-full">
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="guide">사용법 안내</TabsTrigger>
         <TabsTrigger value="tips">제작 팁</TabsTrigger>
