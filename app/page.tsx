@@ -1,11 +1,91 @@
+"use client"
+
+import { useState, useEffect, useCallback } from "react"
 import { ThumbnailUploader } from "@/components/thumbnail-uploader"
 import { DevicePreview } from "@/components/device-preview"
 import { ReadabilityAnalysis } from "@/components/readability-analysis"
-import { AdBanner } from "@/components/ad-banner"
+import { LazyThumbnailGuide } from "@/components/thumbnail-guide/lazy-load"
 import Image from "next/image"
 import Link from "next/link"
+import { errorMonitor } from "@/lib/error-monitoring"
 
 export default function Home() {
+  // 안전장치: 새로운 가이드 섹션 표시 여부
+  const [showNewGuide, setShowNewGuide] = useState(true)
+  
+  // 기존 기능 상태 확인
+  useEffect(() => {
+    let isMounted = true
+    const checkExistingFeatures = () => {
+      try {
+        // 기존 기능들이 정상적으로 로드되었는지 확인
+        const thumbnailUploader = document.querySelector('.thumbnail-uploader')
+        const devicePreview = document.querySelector('.device-preview')
+        const readabilityAnalysis = document.querySelector('.readability-analysis')
+        
+        if (!isMounted) return
+
+        // 각 기능별로 독립적으로 확인
+        if (!thumbnailUploader) {
+          console.warn('Thumbnail uploader not found')
+          errorMonitor.logError('Thumbnail uploader not found', 'low', 'Home')
+        }
+        
+        if (!devicePreview) {
+          console.warn('Device preview not found')
+          errorMonitor.logError('Device preview not found', 'low', 'Home')
+        }
+        
+        if (!readabilityAnalysis) {
+          console.warn('Readability analysis not found')
+          errorMonitor.logError('Readability analysis not found', 'low', 'Home')
+        }
+
+        // 모든 기능이 없을 때만 가이드 섹션 숨김
+        if (!thumbnailUploader && !devicePreview && !readabilityAnalysis) {
+          handleError()
+        }
+      } catch (error) {
+        if (!isMounted) return
+        console.error('Error checking existing features:', error)
+        errorMonitor.logError('Error checking existing features', 'medium', 'Home')
+      }
+    }
+    
+    // 컴포넌트 마운트 후 약간의 지연을 두고 확인
+    const timer = setTimeout(() => {
+      checkExistingFeatures()
+    }, 100)
+    
+    return () => {
+      isMounted = false
+      clearTimeout(timer)
+    }
+  }, [])
+
+  // 에러 발생 시 롤백 처리
+  const handleError = useCallback(() => {
+    setShowNewGuide(false)
+    errorMonitor.logError('Failed to load main page features', 'high', 'Home')
+    
+    // 사용자에게 에러 상태를 알리는 UI 표시
+    const errorMessage = document.createElement('div')
+    errorMessage.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded'
+    errorMessage.role = 'alert'
+    errorMessage.innerHTML = `
+      <strong class="font-bold">오류 발생!</strong>
+      <span class="block sm:inline"> 일부 기능을 로드하지 못했습니다. 페이지를 새로고침해주세요.</span>
+    `
+    document.body.appendChild(errorMessage)
+    
+    // 5초 후 에러 메시지 자동 제거
+    setTimeout(() => {
+      if (errorMessage.parentNode) {
+        errorMessage.parentNode.removeChild(errorMessage)
+      }
+    }, 5000)
+  }, [])
+
   return (
     <main className="min-h-screen bg-gray-50 font-noto">
       {/* Enhanced Header */}
@@ -54,51 +134,43 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Top Ad Banner */}
-      <AdBanner position="top" />
-
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">유튜브 썸네일 최적화하기</h2>
-          <p className="text-lg text-gray-600 mb-6">
-            스마트폰부터 PC까지, 모든 화면에서 썸네일이 어떻게 보이는지 미리 체크하세요. 눈길 확 끄는 썸네일로 조회수
-            쭉쭉 올려보세요!
+      <div className="container mx-auto px-4 py-8 lg:max-w-4xl">
+        {/* 새로운 설명 섹션 */}
+        <section className="bg-white p-8 rounded-lg shadow-md mb-8">
+          <h1 className="text-2xl font-bold mb-2">유튜브 썸네일 최적화하기</h1>
+          <p className="text-lg">
+            스마트폰부터 PC까지, 모든 화면에서 썸네일이 어떻게 보이는지 미리 체크하세요.<br />
+            눈길 확 끄는 썸네일로 조회수 쭉쭉 올려보세요!
           </p>
+        </section>
 
-          {/* Uploader Component */}
+        {/* 새로운 가이드 섹션 (안전장치 적용) */}
+        {showNewGuide && (
+          <section data-testid="thumbnail-guide-section" className="bg-white p-8 rounded-lg shadow-md mb-8">
+            <LazyThumbnailGuide />
+          </section>
+        )}
+
+        {/* 기존 섹션들 */}
+        <section className="bg-white p-8 rounded-lg shadow-md mb-8 thumbnail-uploader">
           <ThumbnailUploader />
         </section>
 
-        {/* Side Ad */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-3/4">
-            {/* Device Preview Section */}
-            <section className="bg-white p-6 rounded-lg shadow-md mb-8">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4">다양한 기기에서 미리보기</h3>
-              <DevicePreview />
-            </section>
+        <section className="bg-white p-8 rounded-lg shadow-md mb-8 device-preview">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">다양한 기기에서 미리보기</h3>
+          <DevicePreview />
+        </section>
 
-            {/* Readability Analysis */}
-            <section className="bg-white p-6 rounded-lg shadow-md mb-8">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4">가독성 분석</h3>
-              <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-800 mb-2">⚠️ 해당 결과는 참고용으로만 활용해 주세요. 100% 정확하지 않을 수 있습니다.</p>
-                <p className="text-sm text-blue-800">🔨 가독성 AI 분석 기능은 현재 개발 중입니다. 완성까지 조금만 기다려 주시기 바랍니다.</p>
-              </div>
-              <ReadabilityAnalysis />
-            </section>
+        <section className="bg-white p-8 rounded-lg shadow-md mb-8 readability-analysis">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">가독성 분석</h3>
+          <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-800 mb-2">⚠️ 해당 결과는 참고용으로만 활용해 주세요. 100% 정확하지 않을 수 있습니다.</p>
+            <p className="text-sm text-blue-800">🔨 가독성 AI 분석 기능은 현재 개발 중입니다. 완성까지 조금만 기다려 주시기 바랍니다.</p>
           </div>
-
-          {/* Side Ad Banner */}
-          <div className="lg:w-1/4">
-            <AdBanner position="side" />
-          </div>
-        </div>
+          <ReadabilityAnalysis />
+        </section>
       </div>
-
-      {/* Bottom Ad Banner */}
-      <AdBanner position="bottom" />
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-8 px-6">

@@ -27,7 +27,7 @@ import Image from "next/image"
 export function DevicePreview() {
   const [viewMode, setViewMode] = useState<"light" | "dark">("light")
   const [youtubeView, setYoutubeView] = useState<"home" | "search">("home")
-  const { thumbnail, metadata } = useAppStore()
+  const { thumbnail } = useAppStore()
 
   const toggleViewMode = () => {
     setViewMode(viewMode === "light" ? "dark" : "light")
@@ -136,19 +136,19 @@ export function DevicePreview() {
                 </div>
               )}
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
-                {metadata.duration || "9:59"}
+                9:59
               </div>
             </div>
             <div className="flex px-2 pt-2">
               <div className="w-9 h-9 rounded-full bg-red-600 flex-shrink-0 flex items-center justify-center text-white font-bold text-xs">
-                {metadata.channelName ? metadata.channelName[0].toUpperCase() : "Y"}
+                Y
               </div>
               <div className="ml-2 flex-1">
                 <p className={`${viewMode === "dark" ? "text-white" : "text-black"} text-sm font-medium line-clamp-2`}>
-                  {metadata.title || "여기에 영상 제목이 표시됩니다"}
+                  여기에 영상 제목이 표시됩니다
                 </p>
                 <p className={`${viewMode === "dark" ? "text-gray-400" : "text-gray-500"} text-xs`}>
-                  {metadata.channelName || "내 채널"} • {metadata.views || "조회수 10만회"} • 3일 전
+                  내 채널 • 조회수 10만회 • 3일 전
                 </p>
               </div>
               <button className={viewMode === "dark" ? "text-white" : "text-black"}>
@@ -297,19 +297,19 @@ export function DevicePreview() {
                 </div>
               )}
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
-                {metadata.duration || "3:24"}
+                3:24
               </div>
             </div>
             <div className="flex px-2 pt-2">
               <div className="w-9 h-9 rounded-full bg-red-600 flex-shrink-0 flex items-center justify-center text-white font-bold text-xs">
-                {metadata.channelName ? metadata.channelName[0].toUpperCase() : "Y"}
+                Y
               </div>
               <div className="ml-2 flex-1">
                 <p className={`${viewMode === "dark" ? "text-white" : "text-black"} text-sm font-medium line-clamp-2`}>
-                  {metadata.title || "여기에 영상 제목이 표시됩니다"}
+                  여기에 영상 제목이 표시됩니다
                 </p>
                 <p className={`${viewMode === "dark" ? "text-gray-400" : "text-gray-500"} text-xs`}>
-                  {metadata.channelName || "내 채널"} • {metadata.views || "조회수 10만회"} • 3일 전
+                  내 채널 • 조회수 10만회 • 3일 전
                 </p>
               </div>
               <button className={viewMode === "dark" ? "text-white" : "text-black"}>
@@ -375,19 +375,19 @@ export function DevicePreview() {
                 <ImageIcon className="w-10 h-10 text-gray-500" />
               </div>
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
-                {metadata.duration || "5:42"}
+                5:42
               </div>
             </div>
             <div className="flex px-2 pt-2">
               <div className="w-9 h-9 rounded-full bg-yellow-500 flex-shrink-0 flex items-center justify-center text-white font-bold text-xs">
-                {metadata.channelName ? metadata.channelName[0].toUpperCase() : "Y"}
+                Y
               </div>
               <div className="ml-2 flex-1">
                 <p className={`${viewMode === "dark" ? "text-white" : "text-black"} text-sm font-medium line-clamp-2`}>
-                  {metadata.title || "여기에 영상 제목이 표시됩니다"}
+                  여기에 영상 제목이 표시됩니다
                 </p>
                 <p className={`${viewMode === "dark" ? "text-gray-400" : "text-gray-500"} text-xs`}>
-                  {metadata.channelName || "내 채널"} • {metadata.views || "조회수 10만회"} • 3일 전
+                  내 채널 • 조회수 10만회 • 3일 전
                 </p>
               </div>
               <button className={viewMode === "dark" ? "text-white" : "text-black"}>
@@ -469,26 +469,13 @@ export function DevicePreview() {
                   <ImageIcon className="h-8 w-8 text-gray-400" />
                 </div>
               )}
-              {item === 0 && (
-                <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
-                  {metadata.duration || "9:59"}
-                </div>
-              )}
             </div>
             <div className="flex">
-              <div className="w-9 h-9 rounded-full bg-gray-300 flex-shrink-0 flex items-center justify-center text-white font-bold text-xs">
-                {item === 0 ? (metadata.channelName ? metadata.channelName[0].toUpperCase() : "Y") : "C"}
-              </div>
+              <div className="w-9 h-9 rounded-full bg-gray-300 flex-shrink-0"></div>
               <div className="ml-2">
-                <p className={`font-medium text-sm truncate ${viewMode === "dark" ? "text-white" : "text-gray-800"}`}>
-                  {item === 0 ? (metadata.title || "여기에 영상 제목이 표시됩니다") : "Video Title Goes Here"}
-                </p>
-                <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                  {item === 0 ? (metadata.channelName || "내 채널") : "Channel Name"}
-                </p>
-                <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                  {item === 0 ? (metadata.views || "조회수 10만회") : "10K views"} • 3일 전
-                </p>
+                <p className={`font-medium text-sm truncate ${viewMode === "dark" ? "text-white" : "text-gray-800"}`}>Video Title Goes Here</p>
+                <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>Channel Name</p>
+                <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>10K views • 3 days ago</p>
               </div>
             </div>
           </div>
@@ -527,22 +514,11 @@ export function DevicePreview() {
                   <ImageIcon className="h-8 w-8 text-gray-400" />
                 </div>
               )}
-              {item === 0 && (
-                <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
-                  {metadata.duration || "9:59"}
-                </div>
-              )}
             </div>
             <div className={`flex-1 ${viewMode === "dark" ? "text-white" : "text-gray-800"}`}>
-              <p className="font-medium text-sm line-clamp-2">
-                {item === 0 ? (metadata.title || "여기에 영상 제목이 표시됩니다") : "클릭을 유도하는 매력적인 유튜브 썸네일 만드는 방법"}
-              </p>
-              <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                {item === 0 ? (metadata.channelName || "내 채널") : "채널명"}
-              </p>
-              <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                {item === 0 ? (metadata.views || "조회수 10만회") : "조회수 10만회"} • 3일 전
-              </p>
+              <p className="font-medium text-sm line-clamp-2">클릭을 유도하는 매력적인 유튜브 썸네일 만드는 방법</p>
+              <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>채널명</p>
+              <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>조회수 10만회 • 3일 전</p>
               <p className={`mt-1 text-xs line-clamp-2 ${viewMode === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                 CTR을 높이고 유튜브에서 영상 성과를 개선하는 썸네일 디자인 방법을 알아보세요.
               </p>
@@ -583,18 +559,16 @@ export function DevicePreview() {
                   </div>
                 )}
                 <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
-                  {item === 0 ? (metadata.duration || "9:59") : `${Math.floor(Math.random() * 10) + 1}:${Math.floor(Math.random() * 50) + 10}`}
+                  {Math.floor(Math.random() * 10) + 1}:{Math.floor(Math.random() * 50) + 10}
                 </div>
               </div>
               <div className={viewMode === "dark" ? "text-white" : "text-gray-800"}>
                 <p className="font-medium text-sm line-clamp-2">
-                  {item === 0 ? (metadata.title || "여기에 영상 제목이 표시됩니다") : "Recommended Video Title Example"}
+                  {item === 0 ? "여기에 영상 제목이 표시됩니다" : "Recommended Video Title Example"}
                 </p>
+                <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>{item === 0 ? "Your Channel" : "Channel Name"}</p>
                 <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                  {item === 0 ? (metadata.channelName || "내 채널") : "Channel Name"}
-                </p>
-                <p className={`text-xs ${viewMode === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                  {item === 0 ? (metadata.views || "조회수 10만회") : `${Math.floor(Math.random() * 100) + 1}K views`} • {Math.floor(Math.random() * 7) + 1} days ago
+                  {Math.floor(Math.random() * 100) + 1}K views • {Math.floor(Math.random() * 7) + 1} days ago
                 </p>
               </div>
             </div>
