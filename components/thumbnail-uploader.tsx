@@ -2,7 +2,7 @@
 
 import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
-import { ImageIcon, Upload } from "lucide-react"
+import { Upload } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { ThumbnailMetadata } from "./thumbnail-metadata"
 

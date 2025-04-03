@@ -1,75 +1,44 @@
 type ErrorSeverity = 'low' | 'medium' | 'high'
-
-interface ErrorLog {
+type ErrorContext = string
+type ErrorData = {
   message: string
   severity: ErrorSeverity
+  context: ErrorContext
   timestamp: Date
-  component: string
-  details?: any
+  details?: unknown
 }
 
-class ErrorMonitor {
+export class ErrorMonitor {
   private static instance: ErrorMonitor
-  private errorLogs: ErrorLog[] = []
-  private readonly MAX_LOGS = 100
+  private errors: ErrorData[] = []
 
   private constructor() {}
 
-  static getInstance(): ErrorMonitor {
+  public static getInstance(): ErrorMonitor {
     if (!ErrorMonitor.instance) {
       ErrorMonitor.instance = new ErrorMonitor()
     }
     return ErrorMonitor.instance
   }
 
-  logError(message: string, severity: ErrorSeverity, component: string, details?: any) {
-    const errorLog: ErrorLog = {
+  public logError(message: string, severity: ErrorSeverity, context: ErrorContext, details?: unknown): void {
+    const errorData: ErrorData = {
       message,
       severity,
+      context,
       timestamp: new Date(),
-      component,
       details
     }
-
-    this.errorLogs.push(errorLog)
-
-    // 로그 개수 제한
-    if (this.errorLogs.length > this.MAX_LOGS) {
-      this.errorLogs.shift()
-    }
-
-    // 심각한 에러인 경우 콘솔에 출력
-    if (severity === 'high') {
-      console.error(`[${component}] ${message}`, details)
-    }
+    this.errors.push(errorData)
+    console.error(`[${severity.toUpperCase()}] ${context}: ${message}`, details || '')
   }
 
-  getErrorLogs(): ErrorLog[] {
-    return [...this.errorLogs]
-  }
-
-  clearLogs() {
-    this.errorLogs = []
-  }
-
-  hasHighSeverityErrors(): boolean {
-    return this.errorLogs.some(log => log.severity === 'high')
+  public getErrors(): ErrorData[] {
+    return [...this.errors]
   }
 }
 
-export const errorMonitor = {
-  logError: (message: string, severity: 'low' | 'medium' | 'high' = 'low', component?: string) => {
-    // 개발 환경에서는 상세 로깅
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[${component || 'Unknown'}] ${message} (${severity})`)
-    }
-    
-    // 프로덕션 환경에서는 심각한 에러만 로깅
-    if (process.env.NODE_ENV === 'production' && severity === 'high') {
-      console.error(`[${component || 'Unknown'}] ${message}`)
-    }
-  }
-}
+export const errorMonitor = ErrorMonitor.getInstance()
 
 // 에러 발생 시 롤백이 필요한지 판단하는 함수
 export const shouldRollback = (error: Error, component: string): boolean => {

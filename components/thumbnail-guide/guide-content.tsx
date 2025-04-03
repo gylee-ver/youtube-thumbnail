@@ -25,7 +25,7 @@ export function GuideContent() {
               <h3 className="text-lg font-semibold text-gray-900">썸네일 업로드하기</h3>
             </div>
             <p className="text-gray-600 mb-2">
-              상단의 박스에 썸네일 이미지를 드래그 앤 드롭하거나, '썸네일 선택하기' 버튼을 클릭해 파일을 업로드하세요.
+              상단의 박스에 썸네일 이미지를 드래그 앤 드롭하거나, &apos;썸네일 선택하기&apos; 버튼을 클릭해 파일을 업로드하세요.
             </p>
             <p className="text-sm text-gray-500">
               지원 포맷: JPG, PNG | 권장 크기: 1280x720px | 최대 용량: 5MB

@@ -86,6 +86,11 @@ export default function Home() {
     }, 5000)
   }, [])
 
+  useEffect(() => {
+    window.addEventListener('error', handleError)
+    return () => window.removeEventListener('error', handleError)
+  }, [handleError])
+
   return (
     <main className="min-h-screen bg-gray-50 font-noto">
       {/* Enhanced Header */}
