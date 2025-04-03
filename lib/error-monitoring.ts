@@ -48,7 +48,7 @@ export const shouldRollback = (error: Error, component: string): boolean => {
       '기존 기능 로드 실패',
       'high',
       component,
-      error
+      { error }
     )
     return true
   }
@@ -58,7 +58,7 @@ export const shouldRollback = (error: Error, component: string): boolean => {
     error.message,
     'medium',
     component,
-    error
+    { error }
   )
   return false
 } 
